@@ -31,7 +31,7 @@ export type Student = {
     email: string;
     contactNumber: string;
     emargencyContactNo: string;
-    bloodgroup: " A+"|"B+"|"AB+"|"O-"
+    bloodgroup: " A+"|"B+"|"AB+"|"O-";
     presentAddress: string;
     permanantAddress: string;
     gaurdian: Gaurdian ;

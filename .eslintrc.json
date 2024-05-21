@@ -1,27 +1,27 @@
 {
-    "parser": "@typescript-eslint/parser",
-    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
-    "parserOptions": {
-      "ecmaVersion": 2018,
-      "sourceType": "module"
-    },
-    "rules": {
-        "@typescript-eslint/no-unused-vars": "error",
-        "@typescript-eslint/no-unused-expressions": "error",
-        "@typescript-eslint/prefer-as-const": "error"
-        // "@typescript-eslint/no-console": "warn",
-        // "@typescript-eslint/no-undef": "error"
-
-
-      // Add custom rules here
-    },
-    "globals": {
-      "process": "readonly"
-    },
-    "env": {
-      "node": true,
-      "es6": true
-    },
-    "ignorePatterns": ["node_modules/", "dist/"]
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "no-unused-vars": "error",
+    "no-unused-expressions": "error",
+    "prefer-const": "error",
+    "no-console": "warn",
+    "no-undef": "error"
+  },
+  "globals": {
+    "process": "readonly"
   }
-  
+}
