@@ -6,7 +6,6 @@ import studentValidationSchema from "./student.validation";
 
 const createStudent = async (req: Request, res: Response) => {
     try {
-        
         const { student: studentdata } = req.body
 // do validation with joi
        const {error,value} = studentValidationSchema.validate(studentdata);
@@ -43,7 +42,11 @@ const getAllStudents = async (req: Request, res: Response) => {
         })
 
     } catch (error) {
-        console.log(error)
+        res.status(500).json({
+            success: false,
+            message: 'something went wrong',
+            error: error,
+        })
     }
 }
 
