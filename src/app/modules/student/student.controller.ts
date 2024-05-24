@@ -8,9 +8,8 @@ const createStudent = async (req: Request, res: Response) => {
     try {
         
         const { student: studentdata } = req.body
-
-       const {error} = studentValidationSchema.validate(studentdata);
-    //    console.log(error, value);
+// do validation with joi
+       const {error,value} = studentValidationSchema.validate(studentdata);
     if(error){
         res.status(500).json({
             success: false,
@@ -18,8 +17,7 @@ const createStudent = async (req: Request, res: Response) => {
             error: error.details,
         })
     }
-
-        const result = await Studentservices.createStudentIntoBb(studentdata)
+        const result = await Studentservices.createStudentIntoBb(value)
         res.status(200).json({
             success: true,
             message: 'Student is created successfully',
