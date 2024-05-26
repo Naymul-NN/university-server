@@ -19,4 +19,5 @@ const getAController =  (req: Request, res: Response) => {
 
 app.get('/', getAController);
 
+
 export default app;
