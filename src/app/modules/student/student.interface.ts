@@ -1,6 +1,6 @@
-// import { Schema, model, connect } from 'mongoose';
+import { Model } from "mongoose";
 
-export type Gaurdian = {
+export type TGaurdian = {
     fatherName: string;
     motherName: string;
     fatherContactNo: string;
@@ -9,33 +9,46 @@ export type Gaurdian = {
     matherOccupation: string;
 }
 
-export type UserName = {
+export type TUserName = {
     fristName: string;
-    middleName: string;
+    middleName?: string;  // Make middleName optional
     lastName: string;
 }
 
-export type LocalGaurdian = {
+export type TLocalGaurdian = {
     name: string;
     occupatino: string;
     contactNo: string;
     address: string;
 }
 
-
-export type Student = {
+export type TStudent = {
     id: string;
-    name: UserName;
-    gender: "male"| " female";
-     dateofBirth: string;
+    password: string;
+    name: TUserName;
+    gender: "male" | "female" | "other";  // Correct enum values
+    dateofBirth?: string;  // Make optional
     email: string;
     contactNumber: string;
     emargencyContactNo: string;
-    bloodgroup: " A+"|"B+"|"AB+"|"O-";
+    bloodgroup?: "A+" | "B+" | "AB+" | "O-";  // Make optional
     presentAddress: string;
     permanantAddress: string;
-    gaurdian: Gaurdian ;
-    localgaurdian: LocalGaurdian;
+    gaurdian: TGaurdian;
+    localgaurdian: TLocalGaurdian;
     profileIma?: string;
-    isActive: "isActive"|"inActive";
-  }
+    isActive: "isActive" | "inActive";
+    isDeleted: boolean;
+}
+// for creating static mathod
+
+ export interface StudentModel extends Model<TStudent>{
+   isUserExists(id: string): Promise<TStudent | null>
+}
+
+// for createin instance
+// export type StudentMethods = {
+//     isUserExits(id: string): Promise<TStudent | null>;
+// }
+
+// export type StudentModel = Model<TStudent, Record<string, never> , StudentMethods>

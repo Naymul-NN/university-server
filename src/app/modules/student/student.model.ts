@@ -1,9 +1,10 @@
 import { Schema, model } from 'mongoose';
-import { Gaurdian, LocalGaurdian, Student, UserName } from './student.interface';
+import { TGaurdian, TLocalGaurdian, TStudent,TUserName, StudentModel } from './student.interface';
 import validator from 'validator';
+import bcrypt from 'bcrypt'
+import config from '../../config';
 
-
-const userNameSchema = new Schema<UserName>({
+const userNameSchema = new Schema<TUserName>({
     fristName: {
         type: String,
         maxlength: [20, 'frist name can not be more then 10 chearacter '],
@@ -30,7 +31,7 @@ const userNameSchema = new Schema<UserName>({
     }
 })
 
-const gaurdianSchema = new Schema<Gaurdian>({
+const gaurdianSchema = new Schema<TGaurdian>({
     fatherName: {
         type: String,
         required: true,
@@ -58,7 +59,7 @@ const gaurdianSchema = new Schema<Gaurdian>({
 
 })
 
-const localgaurdianSchema = new Schema<LocalGaurdian>({
+const localgaurdianSchema = new Schema<TLocalGaurdian>({
     name: {
         type: String,
         required: true,
@@ -77,8 +78,9 @@ const localgaurdianSchema = new Schema<LocalGaurdian>({
     }
 })
 
-const studentSchema = new Schema<Student>({
+const studentSchema = new Schema<TStudent, StudentModel>({
     id: { type: String, required: true, unique: true },
+    password: { type: String, required: true, },
     name: { type: userNameSchema, required: true },
 
     gender: {
@@ -116,7 +118,49 @@ const studentSchema = new Schema<Student>({
         enum: ['isActive', 'inActive'],
         default: 'isActive',
     },
+    isDeleted: {
+        type: Boolean,
+        default: false,
+    }
 
 })
+//  pre save middleware/hook : will work on create() save()
+studentSchema.pre ('save',async function(next){
+    // console.log(this , 'pre hook : we will save data');
 
-export const StudentModel = model<Student>('Student', studentSchema);
+    // hashing password and save into db 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const user = this
+   user.password =await bcrypt.hash(user.password,Number(config.bcrypt_salt_rounds))
+
+next()
+})
+
+// post save middleware / hook
+studentSchema.post('save', function(doc,next){
+    doc.password = ''
+    next();
+})
+
+// Query middleware
+studentSchema.pre('find', function(next){
+   this.find({isDeletef: {$ne: true}})
+    next();
+})
+
+
+// creating a custom static method
+
+studentSchema.statics.isUserExists = async function(id: string){
+    const existingUser = await Student.findOne({id})
+    return existingUser;
+}
+
+//  custom instance mathod
+// studentSchema.methods.isUserExits = async function(id: string) {
+//     const existingUser = await Student.findOne({id});
+
+//     return existingUser;
+// }
+
+export const Student = model<TStudent,StudentModel>('Student', studentSchema);
