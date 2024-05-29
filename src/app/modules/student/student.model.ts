@@ -1,8 +1,8 @@
 import { Schema, model } from 'mongoose';
 import { TGaurdian, TLocalGaurdian, TStudent,TUserName, StudentModel } from './student.interface';
 import validator from 'validator';
-import bcrypt from 'bcrypt'
-import config from '../../config';
+// import bcrypt from 'bcrypt'
+// import config from '../../config';
 
 const userNameSchema = new Schema<TUserName>({
     fristName: {
@@ -80,7 +80,13 @@ const localgaurdianSchema = new Schema<TLocalGaurdian>({
 
 const studentSchema = new Schema<TStudent, StudentModel>({
     id: { type: String, required: true, unique: true },
-    password: { type: String, required: true, },
+    user: {
+        type:Schema.Types.ObjectId,
+        required:[ true, 'User id is required'],
+        unique: true,
+        ref: 'User',
+    },
+    // password: { type: String, required: true, },
     name: { type: userNameSchema, required: true },
 
     gender: {
@@ -113,11 +119,6 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     gaurdian: { type: gaurdianSchema, required: true },
     localgaurdian: { type: localgaurdianSchema, required: true },
     profileIma: { type: String },
-    isActive: {
-        type: String,
-        enum: ['isActive', 'inActive'],
-        default: 'isActive',
-    },
     isDeleted: {
         type: Boolean,
         default: false,
@@ -127,28 +128,12 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     virtuals: true,
 }, }
 )
-// 
+// virtual
 studentSchema.virtual('fullName').get(function(){
     return this.name.fristName + this.name.middleName + this.name.lastName;
 })
 
-//  pre save middleware/hook : will work on create() save()
-studentSchema.pre ('save',async function(next){
-    // console.log(this , 'pre hook : we will save data');
 
-    // hashing password and save into db 
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const user = this
-   user.password =await bcrypt.hash(user.password,Number(config.bcrypt_salt_rounds))
-
-next()
-})
-
-// post save middleware / hook
-studentSchema.post('save', function(doc,next){
-    doc.password = ''
-    next();
-})
 
 // Query middleware
 studentSchema.pre('find', function(next){

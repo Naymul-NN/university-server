@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { Model } from "mongoose";
 
 export type TGaurdian = {
@@ -24,6 +25,7 @@ export type TLocalGaurdian = {
 
 export type TStudent = {
     id: string;
+    user: Types.ObjectId
     password: string;
     name: TUserName;
     gender: "male" | "female" | "other";  // Correct enum values
@@ -37,7 +39,7 @@ export type TStudent = {
     gaurdian: TGaurdian;
     localgaurdian: TLocalGaurdian;
     profileIma?: string;
-    isActive: "isActive" | "inActive";
+   
     isDeleted: boolean;
 }
 // for creating static mathod
