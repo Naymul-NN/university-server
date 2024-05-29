@@ -14,9 +14,9 @@ const getAllStudents = async (req: Request, res: Response, next: NextFunction) =
             data: result
         })
 
-    } catch (error) {
+    } catch (err) {
        
-        next(error)
+        next(err)
     }
 }
 //  single student get
