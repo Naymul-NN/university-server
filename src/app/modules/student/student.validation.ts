@@ -14,7 +14,7 @@ const userNameSchema = z.object({
 });
 
 // Define Guardian schema
-const gaurdianSchema = z.object({
+const gaurdianvalidationSchema = z.object({
   fatherName: z.string().nonempty('Father name is required'),
   motherName: z.string().nonempty('Mother name is required'),
   fatherContactNo: z.string().nonempty('Father contact number is required'),
@@ -24,7 +24,7 @@ const gaurdianSchema = z.object({
 });
 
 // Define LocalGuardian schema
-const localgaurdianSchema = z.object({
+const localgaurdianValidationSchema = z.object({
   name: z.string().nonempty('Name is required'),
   occupatino: z.string().nonempty('Occupation is required'),
   contactNo: z.string().nonempty('Contact number is required'),
@@ -32,24 +32,28 @@ const localgaurdianSchema = z.object({
 });
 
 // Define Student schema
-const studentvalidationSchema = z.object({
-  id: z.string().nonempty('ID is required'),
-  password: z.string().nonempty('password is required'),
-  name: userNameSchema,
-  gender: z.enum(['male', 'female', 'other']),
-  dateofBirth: z.string().optional(),
-  email: z.string().nonempty('Email is required').email('Email is not valid'),
-  contactNumber: z.string().nonempty('Contact number is required'),
-  emargencyContactNo: z.string().nonempty('Emergency contact number is required'),
-  bloodgroup: z.enum(['A+', 'B+', 'AB+', 'O-']).optional(),
-  presentAddress: z.string().nonempty('Present address is required'),
-  permanantAddress: z.string().nonempty('Permanent address is required'),
-  gaurdian: gaurdianSchema,
-  localgaurdian: localgaurdianSchema,
-  profileIma: z.string().optional(),
-  isActive: z.enum(['isActive', 'inActive']).default('isActive'),
-  isDeleted: z.boolean(),
+const createstudentvalidationSchema = z.object({
+  body: z.object({
+    password: z.string().nonempty('password is required'),
+   student: z.object({
+    name: userNameSchema,
+    gender: z.enum(['male', 'female', 'other']),
+    dateofBirth: z.string().optional(),
+    email: z.string().nonempty('Email is required').email('Email is not valid'),
+    contactNumber: z.string().nonempty('Contact number is required'),
+    emargencyContactNo: z.string().nonempty('Emergency contact number is required'),
+    bloodgroup: z.enum(['A+', 'B+', 'AB+', 'O-']).optional(),
+    presentAddress: z.string().nonempty('Present address is required'),
+    permanantAddress: z.string().nonempty('Permanent address is required'),
+    gaurdian: gaurdianvalidationSchema,
+    localgaurdian: localgaurdianValidationSchema,
+    profileIma: z.string().optional(),
+   })
+    
+  })
 });
 
 // Export the schema
-export default studentvalidationSchema
+export const studentvalidation = {
+  createstudentvalidationSchema
+}

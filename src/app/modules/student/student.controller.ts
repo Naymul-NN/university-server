@@ -1,15 +1,16 @@
-import { NextFunction, Request, Response } from "express";
+// import {  NextFunction, Request, RequestHandler, Response } from "express";
 import { Studentservices } from "./student.service";
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
+import catchAsync from "../../utils/catchAsync";
+
 
 
 // allstudentget
 
-const getAllStudents = async (req: Request, res: Response, next: NextFunction) => {
-    try {
+const getAllStudents = catchAsync( async (req, res) => {
+    
         const result = await Studentservices.getAllstudentsFromDb()
-
         sendResponse(res,{
             statusCode: httpStatus.OK ,
             success: true,
@@ -17,14 +18,10 @@ const getAllStudents = async (req: Request, res: Response, next: NextFunction) =
             data: result
         })
 
-    } catch (err) {
-       
-        next(err)
-    }
-}
+})
 //  single student get
-const getSingleStudent = async (req: Request, res: Response, next: NextFunction)=> {
- try {
+const getSingleStudent = catchAsync(async (req, res)=> {
+
     const {studentId} = req.params;
     const result = await Studentservices.getSingleStudentFromDB(studentId);
     sendResponse(res,{
@@ -33,13 +30,11 @@ const getSingleStudent = async (req: Request, res: Response, next: NextFunction)
         message: 'Student is fatch successfully',
         data: result
     })
- }catch(err){
-   next(err)
- }
-}
+
+})
 // delete
-const deleteSingleStudent = async (req: Request, res: Response, next: NextFunction)=> {
- try {
+const deleteSingleStudent =catchAsync( async (req, res)=> {
+ 
     const {studentId} = req.params;
     const result = await Studentservices.deleteSingleStudentFromDB(studentId);
     sendResponse(res,{
@@ -48,10 +43,8 @@ const deleteSingleStudent = async (req: Request, res: Response, next: NextFuncti
         message: 'Student is deleted successfully',
         data: result
     })
- }catch(err){
-    next(err)
- }
-}
+ 
+})
 
 export const studentController = {
     // createStudent,
