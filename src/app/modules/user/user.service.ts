@@ -1,18 +1,15 @@
 
 import config from "../../config";
+import { AcademicSemesterModel } from "../academicSesmester/academicSemester.model";
 import { TStudent } from "../student/student.interface";
 import { Student } from "../student/student.model";
 import { Tuser } from "./user.interface";
 import { User } from "./user.model";
+import { generateStudentId } from "./user.utils";
 
 
-const createStudentIntoBb = async (password: string, studentData: TStudent) => {
+const createStudentIntoBb = async (password: string, payload: TStudent) => {
 
-    // if(await Student.isUserExists(studentData.id)){
-    //     throw new Error ('User already exists')
-    // }
-    // create a user object
-     
     const userData : Partial<Tuser> = {};
 
     // if password is not given , use deafult password
@@ -24,8 +21,11 @@ const createStudentIntoBb = async (password: string, studentData: TStudent) => {
 
     // set student role
      userData.role = 'student';
-    //  set manyally generated id
-     userData.id = '2030100000'
+
+//    find academid semester info
+const admissionSemester= await AcademicSemesterModel.findById(payload.admissionSemester)
+
+ userData.id = await generateStudentId(admissionSemester);
 
     //  create a user
     const newUser = await User.create(userData)
@@ -34,10 +34,13 @@ const createStudentIntoBb = async (password: string, studentData: TStudent) => {
     // create a student
     if (Object.keys(newUser).length){
         // set id, _id as user
-        studentData.id = newUser.id;
-        studentData.user = newUser._id; //refarence id
+        payload.id = newUser.id;
 
-        const newStudent = await Student.create(studentData);
+        payload.user = newUser._id; //refarence id
+
+
+        const newStudent = await Student.create(payload);
+
         return newStudent;
     }
    

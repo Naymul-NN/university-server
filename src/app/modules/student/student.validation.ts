@@ -47,6 +47,7 @@ const createstudentvalidationSchema = z.object({
     permanantAddress: z.string().nonempty('Permanent address is required'),
     gaurdian: gaurdianvalidationSchema,
     localgaurdian: localgaurdianValidationSchema,
+    admissionSemester: z.string(),
     profileIma: z.string().optional(),
    })
     

@@ -39,7 +39,7 @@ export type TStudent = {
     gaurdian: TGaurdian;
     localgaurdian: TLocalGaurdian;
     profileIma?: string;
-   
+   admissionSemester: Types.ObjectId;
     isDeleted: boolean;
 }
 // for creating static mathod
