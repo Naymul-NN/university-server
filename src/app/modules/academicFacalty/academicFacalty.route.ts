@@ -16,7 +16,7 @@ router.patch(
     validationRequest(
         academicFacaltyVlidation.updateacademicFacaltyVlidationSchema,
     ),
-    AcademicFacaltyController.updateAcademicSemester,
+    AcademicFacaltyController.updateAcademicFacalty,
   );
 
 

@@ -44,7 +44,7 @@ const getSingleAcademicFacalty = catchAsync(async (req, res)=> {
 
 })
 // update
-const updateAcademicSemester = catchAsync(async (req, res) => {
+const updateAcademicFacalty = catchAsync(async (req, res) => {
     const { FacaltyId } = req.params;
     const result = await academicFacaltyService.updateAcademicFacaltyIntoDB(
       FacaltyId,
@@ -63,5 +63,5 @@ export const AcademicFacaltyController = {
     createAcademicFacalty,
     getAllAcademicFacalty,
     getSingleAcademicFacalty,
-    updateAcademicSemester
+    updateAcademicFacalty
 }
