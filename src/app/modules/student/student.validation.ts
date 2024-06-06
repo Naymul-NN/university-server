@@ -58,7 +58,59 @@ const createstudentvalidationSchema = z.object({
   })
 });
 
+const updateuserNameSchema = z.object({
+  firstName: z.string()
+    .max(20, 'First name can not be more than 20 characters')
+    .regex(/^[A-Z][a-z]*$/, 'First name must be capitalized')
+    .optional(),
+  middleName: z.string().optional(),
+  lastName: z.string()
+    .regex(/^[A-Za-z]+$/, 'Last name is not valid')
+    .optional()
+});
+
+const updategaurdianvalidationSchema = z.object({
+  fatherName: z.string().optional(),
+  motherName: z.string().optional(),
+  fatherContactNo: z.string().optional(),
+  motherContactNo: z.string().optional(),
+  fatherOccupation: z.string().optional(),
+  motherOccupation: z.string().optional()
+});
+
+const updatelocalgaurdianValidationSchema = z.object({
+  name: z.string().optional(),
+  occupation: z.string().optional(),
+  contactNo: z.string().optional(),
+  address: z.string().optional(),
+});
+
+const updatestudentvalidationSchema = z.object({
+  body: z.object({
+    password: z.string().optional(),
+    student: z.object({
+      name: updateuserNameSchema.optional(),
+      gender: z.enum(['male', 'female', 'other']).optional(),
+      dateofBirth: z.string().optional(),
+      email: z.string().email('Email is not valid').optional(),
+      contactNumber: z.string().optional(),
+      emargencyContactNo: z.string().optional(),
+      bloodgroup: z.enum(['A+', 'B+', 'AB+', 'O-']).optional(),
+      presentAddress: z.string().optional(),
+      permanantAddress: z.string().optional(),
+      gaurdian: updategaurdianvalidationSchema.optional(),
+      localgaurdian: updatelocalgaurdianValidationSchema.optional(),
+      admissionSemester: z.string().optional(),
+      profileIma: z.string().optional(),
+      academicDepartment: z.string().optional(),
+    }).optional()
+  }).optional()
+});
+
+
+
 // Export the schema
 export const studentvalidation = {
-  createstudentvalidationSchema
+  createstudentvalidationSchema,
+  updatestudentvalidationSchema
 }

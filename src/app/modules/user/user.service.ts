@@ -59,7 +59,7 @@ const createStudentIntoBb = async (password: string, payload: TStudent) => {
     } catch (err) {
         await session.abortTransaction();
         await session.endSession();
-        // throw new AppError(httpStatus.NOT_FOUND,'faild to create student')
+        throw new AppError(httpStatus.NOT_FOUND,'faild to create student')
     }
 }
 
