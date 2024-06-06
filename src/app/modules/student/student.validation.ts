@@ -49,6 +49,10 @@ const createstudentvalidationSchema = z.object({
     localgaurdian: localgaurdianValidationSchema,
     admissionSemester: z.string(),
     profileIma: z.string().optional(),
+    academicDepartment:z.string({
+                invalid_type_error: 'Academic Department name must be string',
+                required_error: 'Academic department is require'
+    }),
    })
     
   })
