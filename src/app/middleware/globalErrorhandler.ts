@@ -4,9 +4,11 @@
 
 import { NextFunction, Request, Response } from 'express';
 
-import { ZodError, ZodIssue } from 'zod';
+import { ZodError } from 'zod';
 import { TErrorSource } from '../interface/error';
 import config from '../config';
+import handleZodError from '../errors/handleZodError';
+import handleValidationError from '../errors/handleValidationError';
 
 const globalErrorhandler = (err: any, req: Request, res: Response, next: NextFunction) => {
 
@@ -22,42 +24,26 @@ const globalErrorhandler = (err: any, req: Request, res: Response, next: NextFun
 
   }]
 
-  const handleZodError = (err: ZodError) => {
-
-const errorSourse: TErrorSource = err.issues.map((issue: ZodIssue)=>{
-  return{
-    path: issue?.path[issue.path.length - 1],
-    message: issue.message,
-  }
-})
-
-   const statusCode = 400;
-
-   return{
-    statusCode,
-    message: 'zod validaton error',
-    errorSourse
-
-   }
-  }
-
-
-
 
   if (err instanceof ZodError) {
-
 
 const simplifiedError = handleZodError(err)
    statusCode = simplifiedError?.statusCode;
    message = simplifiedError?.message;
-   errorSourse = simplifiedError?.errorSourse
-    
+   errorSourse = simplifiedError?.errorSourse  
+  }else if(err?.name === 'ValidationError'){
+
+    const simplifiedError= handleValidationError(err)
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSourse = simplifiedError?.errorSourse;
   }
 
   return res.status(statusCode).json({
     success: false,
     message,
     errorSourse,
+    // err,
     stack: config.NODE_ENV === 'development' ? err?.stack : null,
     
   })

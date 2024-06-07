@@ -7,7 +7,9 @@ import { AcademicDepartmentController } from "./academinDepartment.controller";
 
 const router = express.Router()
 
-router.post('/create-academic-department', validationRequest(academicDepartmentVlidation.academicDepartmentVlidationSchema), AcademicDepartmentController.createAcademicDepartment)
+router.post('/create-academic-department',
+  //  validationRequest(academicDepartmentVlidation.academicDepartmentVlidationSchema), 
+   AcademicDepartmentController.createAcademicDepartment)
 router.get('/', AcademicDepartmentController.getAllAcademicDepartment);
 router.get('/:departmentId', AcademicDepartmentController.getSingleAcademicDepartment);
 
