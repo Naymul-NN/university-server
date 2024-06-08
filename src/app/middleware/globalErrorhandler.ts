@@ -11,6 +11,7 @@ import handleZodError from '../errors/handleZodError';
 import handleValidationError from '../errors/handleValidationError';
 import handleCastError from '../errors/handleCastError';
 import handleDuplicateError from '../errors/handleDuplicateError';
+import AppError from '../errors/appErrors';
 
 const globalErrorhandler = (err: any, req: Request, res: Response, next: NextFunction) => {
 
@@ -49,6 +50,19 @@ const simplifiedError = handleZodError(err)
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errorSourse = simplifiedError?.errorSourse;
+  } else if(err instanceof AppError){
+    statusCode = err?.statusCode;
+    message = err.message;
+    errorSourse = [{
+      path: "",
+      message: err?.message,
+    }];
+  }else if(err instanceof Error){
+    message = err.message;
+    errorSourse = [{
+      path: "",
+      message: err?.message,
+    }];
   }
 
   return res.status(statusCode).json({
