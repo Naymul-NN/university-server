@@ -6,8 +6,18 @@ import httpStatus from "http-status";
 import { TStudent } from "./student.interface";
 
 
-const getAllstudentsFromDb = async () => {
-    const result = await Student.find().populate('admissionSemester')
+const getAllstudentsFromDb = async (query: Record<string, unknown>) => {
+  let searchTerm = "";
+  if(query?.searchTerm){
+    searchTerm = query?.searchTerm as string;
+  }
+
+
+    const result = await Student.find({
+        $or: ['email', 'name.fristName','presentAddress'].map((field)=>({
+            [field]: {$regex: searchTerm, $options:'i'},
+        }))
+    }).populate('admissionSemester')
         .populate({
             path: 'academicDepartment',
             populate: {
@@ -91,10 +101,11 @@ const deleteSingleStudentFromDB = async (id: string) => {
         return deletedStudent;
 
 
-    } catch (err) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
         await session.abortTransaction();
         await session.endSession();
-        throw new Error('student deleted failed')
+        throw new Error(err)
     }
 
 
