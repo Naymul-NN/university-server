@@ -7,24 +7,75 @@ import { TStudent } from "./student.interface";
 
 
 const getAllstudentsFromDb = async (query: Record<string, unknown>) => {
-  let searchTerm = "";
-  if(query?.searchTerm){
-    searchTerm = query?.searchTerm as string;
-  }
+
+    const queryObj = { ...query }; //copy
+
+    let searchTerm = "";
+    if (query?.searchTerm) {
+        searchTerm = query?.searchTerm as string;
+    }
+
+    const studentSearchAblefield = ['email', 'name.fristName', 'presentAddress']
 
 
-    const result = await Student.find({
-        $or: ['email', 'name.fristName','presentAddress'].map((field)=>({
-            [field]: {$regex: searchTerm, $options:'i'},
+    const searchQuery = Student.find({
+        $or: studentSearchAblefield.map((field) => ({
+            [field]: { $regex: searchTerm, $options: 'i' },
         }))
-    }).populate('admissionSemester')
+    })
+
+
+    // filtering
+    const excludeFields = ['searchTerm', 'sort', 'limit','page','fields']
+
+    excludeFields.forEach((el) => delete queryObj[el])
+    // console.log({ query, queryObj })
+
+
+    const filtering = searchQuery.find(queryObj)
+        .populate('admissionSemester')
         .populate({
             path: 'academicDepartment',
             populate: {
                 path: 'academicFacalty',
             }
         })
-    return result
+    let sort = '-createdAt'
+
+    if (query.sort) {
+        sort = query.sort as string;
+    }
+    const sortQuey = filtering.sort(sort)
+
+    let page = 1;
+    let limit = 1;
+    let skip = 0;
+
+    if (query.limit) {
+        limit = query.limit as number;
+    }
+
+    if (query.page) {
+        page = Number(query.page)
+        skip = (page-1)*limit
+    }
+    // pagination
+    const paginateQuery = sortQuey.skip(skip);
+
+    const limitQury =  paginateQuery.limit(limit)
+
+// field limiting
+
+let fields = '__v';
+
+if(query.fields){
+    fields = (query.fields as string).split(',').join(' ')
+    console.log(fields);
+}
+
+const fieldQuery =await limitQury.select(fields)
+
+    return fieldQuery;
 }
 
 const getSingleStudentFromDB = async (id: string) => {
@@ -38,36 +89,36 @@ const getSingleStudentFromDB = async (id: string) => {
     return result;
 }
 // update
-const updateStudentFromDB = async (id: string,payload: Partial<TStudent>) => {
+const updateStudentFromDB = async (id: string, payload: Partial<TStudent>) => {
 
-const {name, gaurdian,localgaurdian, ...remainingStudentData} = payload; 
+    const { name, gaurdian, localgaurdian, ...remainingStudentData } = payload;
 
-const modifiedUpdatedData : Record<string, unknown> = {
-    ...remainingStudentData,
-}
+    const modifiedUpdatedData: Record<string, unknown> = {
+        ...remainingStudentData,
+    }
 
-if(name && Object.keys(name).length){
- for(const [key , value ] of Object.entries(name)){
-    modifiedUpdatedData[`name.${key}`] = value;
- }
-}
+    if (name && Object.keys(name).length) {
+        for (const [key, value] of Object.entries(name)) {
+            modifiedUpdatedData[`name.${key}`] = value;
+        }
+    }
 
-if(gaurdian && Object.keys(gaurdian).length){
- for(const [key , value ] of Object.entries(gaurdian)){
-    modifiedUpdatedData[`gaurdian.${key}`] = value;
- }
-}
-if(localgaurdian && Object.keys(localgaurdian).length){
- for(const [key , value ] of Object.entries(localgaurdian)){
-    modifiedUpdatedData[`localgaurdian.${key}`] = value;
- }
-}
+    if (gaurdian && Object.keys(gaurdian).length) {
+        for (const [key, value] of Object.entries(gaurdian)) {
+            modifiedUpdatedData[`gaurdian.${key}`] = value;
+        }
+    }
+    if (localgaurdian && Object.keys(localgaurdian).length) {
+        for (const [key, value] of Object.entries(localgaurdian)) {
+            modifiedUpdatedData[`localgaurdian.${key}`] = value;
+        }
+    }
 
 
     const result = await Student.findOneAndUpdate(
-        { id }, 
+        { id },
         modifiedUpdatedData,
-        {new: true , runValidators: true}
+        { new: true, runValidators: true }
     )
     return result;
 }
@@ -100,8 +151,7 @@ const deleteSingleStudentFromDB = async (id: string) => {
 
         return deletedStudent;
 
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
         await session.abortTransaction();
         await session.endSession();
