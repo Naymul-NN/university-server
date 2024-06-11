@@ -21,7 +21,7 @@ const createCourse = catchAsync(async (req, res) => {
 
 // get all semester
 const getAllCourse = catchAsync( async (req, res) => {
-    const result = await CourseService.getAllCourseFromDB()
+    const result = await CourseService.getAllCourseFromDB(req.query)
     sendResponse(res,{
         statusCode: httpStatus.OK ,
         success: true,
@@ -74,7 +74,7 @@ const deleteCourse = catchAsync(async (req, res) => {
     });
   });
 
-export const AcademicFacaltyController = {
+export const courseController = {
   createCourse,
   getAllCourse,
   getSingleCourse,
