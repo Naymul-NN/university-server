@@ -14,13 +14,13 @@ router.get('/', courseController.getAllCourse);
 router.get('/:id', courseController.getSingleCourse);
 router.delete('/:id', courseController.deleteCourse);
 
-// router.patch(
-//     '/:FacaltyId',
-//     validationRequest(
-//         academicFacaltyVlidation.updateacademicFacaltyVlidationSchema,
-//     ),
-//     AcademicFacaltyController.updateAcademicFacalty,
-//   );
+router.patch(
+    '/:id',
+    validationRequest(
+        CourseVlidation.updateCourseValidationSchema,
+    ),
+        courseController.updateCourse,
+  );
 
 
 
