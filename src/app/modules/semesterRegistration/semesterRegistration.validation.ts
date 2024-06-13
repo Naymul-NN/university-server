@@ -12,6 +12,7 @@ const createSemesterRegistrationValidationSchema = z.object({
   }),
 });
 
+
 const upadateSemesterRegistrationValidationSchema = z.object({
   body: z.object({
     academicSemester: z.string().optional(),
