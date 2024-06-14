@@ -2,15 +2,13 @@ import express from 'express';
 import { OfferedCourseControllers } from './offeredCourse.controller';
 import validationRequest from '../../middleware/validateRequest';
 import { OfferedCourseValidations } from './offeredCourse.validation';
-// import validateRequest from '../../middlewares/validateRequest';
-// import { OfferedCourseControllers } from './OfferedCourse.controller';
-// import { OfferedCourseValidations } from './OfferedCourse.validation';
+
 
 const router = express.Router();
 
-// router.get('/', OfferedCourseControllers.getAllOfferedCourses);
+router.get('/', OfferedCourseControllers.getAllOfferedCourses);
 
-// router.get('/:id', OfferedCourseControllers.getSingleOfferedCourses);
+router.get('/:id', OfferedCourseControllers.getSingleOfferedCourses);
 
 router.post(
   '/create-offered-course',
