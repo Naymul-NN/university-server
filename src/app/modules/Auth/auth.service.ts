@@ -2,7 +2,9 @@ import httpStatus from "http-status";
 import AppError from "../../errors/appErrors";
 import { User } from "../user/user.model";
 import { TLoginUser } from "./auth.interface";
-// import bcrypt from "bcrypt"
+
+import jwt from "jsonwebtoken"
+import config from "../../config";
 
 const logInUser = async (paylod: TLoginUser) => {
     
@@ -17,29 +19,41 @@ const logInUser = async (paylod: TLoginUser) => {
 
     // checking the user is deleted or not
 
-    // const isDeleted = isUserExists?.isDeleted;
+    const isDeleted = user?.isDeleted;
     
-    // if (isDeleted === true){
-    //    throw new AppError(httpStatus.FORBIDDEN, 'this user is already deleted deleted')
-    // }
+    if (isDeleted === true){
+       throw new AppError(httpStatus.FORBIDDEN, 'this user is already deleted deleted')
+    }
 
-    // // check the status " inprogress" or " bloked"
+    // check the status " inprogress" or " bloked"
    
-    // const userStatus = isUserExists?.status;
+    const userStatus = user?.status;
     
-    // if (userStatus === "blocked"){
-    //    throw new AppError(httpStatus.FORBIDDEN, 'this user is already blocked')
-    // }
+    if (userStatus === "blocked"){
+       throw new AppError(httpStatus.FORBIDDEN, 'this user is already blocked')
+    }
 
     // // check the password is correct or not 
-    // const isPsswordMatched = await bcrypt.compare(paylod?.password, isUserExists?.password) 
 
-    // console.log(isPsswordMatched)
     if(!await User.isPasswordMatched(paylod?.password, user?.password)){
         throw new AppError(httpStatus.FORBIDDEN, 'wrong password')
     }
 
-    return{};
+    // create jwt token and send to the user
+const jwtPayload = {
+    Userid: user.id,
+    role: user.role
+
+}
+
+
+    const accessToken =  jwt.sign(
+       jwtPayload, config.jwt_access_secret as string, { expiresIn: '10d' });
+
+    return{
+        accessToken,
+        needsPasswordChange: user?.needsPsswordChange,
+    };
 }
 
 export const authService = {
