@@ -11,7 +11,7 @@ const  LoginUser = catchAsync(async (req, res) => {
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'academic facalty is created successfully',
+        message: 'user login  successfull',
         data: result
     })
 })
