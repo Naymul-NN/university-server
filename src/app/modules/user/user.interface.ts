@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
+import { Model } from "mongoose";
 
 
-export type Tuser = {
+export interface Tuser  {
     id: string;
     password: string;
     needsPsswordChange: boolean;
@@ -10,3 +12,7 @@ export type Tuser = {
 
 }
 
+export interface UserModel extends Model<Tuser>{
+    isUserExistsByCustomId(id: string): Promise<Tuser>;
+    isPasswordMatched(plainTextPassword: string , hashedPassword: string): Promise<boolean>
+}
