@@ -19,7 +19,9 @@ const createAcademicFacalty = catchAsync(async (req, res) => {
 })
 
 // get all semester
+
 const getAllAcademicFacalty = catchAsync( async (req, res) => {
+    console.log('test', req.user);
     const result = await academicFacaltyService.getAllacademicFacaltyFromDb()
     sendResponse(res,{
         statusCode: httpStatus.OK ,

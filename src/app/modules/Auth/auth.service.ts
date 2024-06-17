@@ -43,7 +43,6 @@ const logInUser = async (paylod: TLoginUser) => {
 const jwtPayload = {
     Userid: user.id,
     role: user.role
-
 }
 
 
