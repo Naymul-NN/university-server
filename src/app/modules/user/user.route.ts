@@ -7,10 +7,12 @@ import { studentvalidation } from "../student/student.validation";
 import validationRequest from "../../middleware/validateRequest";
 import { createFacultyValidationSchema } from "../facalty/faculty.validation";
 import { AdminValidations } from "../Admin/admin.validation";
+import auth from "../../middleware/auth";
+import { USER_ROLE } from "./user.constant";
 
 const router = express.Router()
 
-router.post('/create-student', validationRequest(studentvalidation.createstudentvalidationSchema), userController.createStudent)
+router.post('/create-student',auth(USER_ROLE.admin) , validationRequest(studentvalidation.createstudentvalidationSchema), userController.createStudent)
 router.post(
     '/create-faculty',
     validationRequest(createFacultyValidationSchema),

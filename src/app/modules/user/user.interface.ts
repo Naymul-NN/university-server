@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { Model } from "mongoose";
+import { USER_ROLE } from "./user.constant";
 
 
 export interface Tuser  {
@@ -16,3 +17,5 @@ export interface UserModel extends Model<Tuser>{
     isUserExistsByCustomId(id: string): Promise<Tuser>;
     isPasswordMatched(plainTextPassword: string , hashedPassword: string): Promise<boolean>
 }
+
+export type TUserRole = keyof typeof USER_ROLE ;
