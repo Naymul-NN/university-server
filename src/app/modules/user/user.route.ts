@@ -12,15 +12,18 @@ import { USER_ROLE } from "./user.constant";
 
 const router = express.Router()
 
-router.post('/create-student',auth(USER_ROLE.admin) , validationRequest(studentvalidation.createstudentvalidationSchema), userController.createStudent)
+router.post('/create-student',auth(USER_ROLE.admin)
+ , validationRequest(studentvalidation.createstudentvalidationSchema), userController.createStudent)
 router.post(
     '/create-faculty',
+    auth(USER_ROLE.admin),
     validationRequest(createFacultyValidationSchema),
     userController.createFaculty,
   );
 
   router.post(
     '/create-admin',
+    // auth(USER_ROLE.admin),
     validationRequest(AdminValidations.createAdminValidationSchema),
     userController.createAdmin,
   );
