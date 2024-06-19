@@ -1,16 +1,17 @@
 import bcrypt from 'bcrypt';
-import httpStatus from 'http-status';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import config from '../../config';
-import { User } from '../user/user.model';
-import { TLoginUser } from './auth.interface';
-import { createToken } from './auth.utils';
-import AppError from '../../errors/appErrors';
+
+import httpStatus from "http-status";
+import AppError from "../../errors/appErrors";
+import { User } from "../user/user.model";
+import { TLoginUser } from "./auth.interface";
+import config from "../../config";
+import jwt,{ JwtPayload } from "jsonwebtoken";
+import { createToken } from "./auth.utils";
 
 const loginUser = async (payload: TLoginUser) => {
   // checking if the user is exist
   const user = await User.isUserExistsByCustomId(payload.id);
-
+  console.log(user);
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
   }
