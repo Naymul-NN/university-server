@@ -5,11 +5,15 @@ import express from "express";
 import validationRequest from "../../middleware/validateRequest";
 import { CourseVlidation } from "./course.validation";
 import { courseController } from "./course.controller";
+import auth from "../../middleware/auth";
+import { USER_ROLE } from "../user/user.constant";
 // import { academicFacaltyVlidation } from "./academicFacalty.validation";
 
 const router = express.Router()
 
-router.post('/create-course', validationRequest(CourseVlidation.createCourseValidationSchema),courseController.createCourse)
+router.post('/create-course',
+  auth(USER_ROLE.admin,USER_ROLE.faculty),
+  validationRequest(CourseVlidation.createCourseValidationSchema),courseController.createCourse)
 router.get('/', courseController.getAllCourse);
 router.get('/:id', courseController.getSingleCourse);
 router.delete('/:id', courseController.deleteCourse);
