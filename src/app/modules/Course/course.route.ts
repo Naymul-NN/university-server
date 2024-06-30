@@ -20,6 +20,7 @@ router.delete('/:id', courseController.deleteCourse);
 
 router.patch(
     '/:id',
+    auth(USER_ROLE.admin),
     validationRequest(
         CourseVlidation.updateCourseValidationSchema,
     ),
@@ -31,6 +32,7 @@ router.patch(
     ,courseController.assignFaculties);
 
   router.delete('/:courseId/remove-courseFaculties',
+    auth(USER_ROLE.admin),
     validationRequest(CourseVlidation.assignCourseValidationSchema)
     ,courseController.removeCourseFaculties);
 
