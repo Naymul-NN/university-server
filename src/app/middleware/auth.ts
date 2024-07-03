@@ -27,7 +27,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
 
     // checking if the user is exist
     const user = await User.isUserExistsByCustomId(userId);
-  console.log(user)
+  // console.log(user)
     if (!user) {
       throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
     }

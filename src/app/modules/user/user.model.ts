@@ -10,6 +10,11 @@ const userSchema = new Schema<Tuser, UserModel>({
         required: true,
         unique: true,
     },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+      },
     password: {
         type : String,
         required: true,
@@ -24,7 +29,7 @@ const userSchema = new Schema<Tuser, UserModel>({
       },
     role: {
         type : String,
-        enum:['student', 'faculty', 'admin' ]
+        enum: ['superAdmin', 'student', 'faculty', 'admin'],
     },
     status:{
         type: String,
