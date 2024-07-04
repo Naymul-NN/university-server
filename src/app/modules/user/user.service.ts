@@ -14,10 +14,14 @@ import { TFaculty } from "../facalty/faculty.interface";
 import { AcademicDepartmentModel } from "../academicDepartment/academicDepartment.model";
 import { Faculty } from "../facalty/faculty.model";
 import { Admin } from "../Admin/admin.model";
+import { sendImageToCloudinary } from "../../utils/sendImageToCouldnary";
 
 
 
-const createStudentIntoBb = async (password: string, payload: TStudent) => {
+const createStudentIntoBb = async (
+   file: any,
+   password: string,
+   payload: TStudent) => {
 
     const userData: Partial<Tuser> = {};
 
@@ -44,6 +48,16 @@ const createStudentIntoBb = async (password: string, payload: TStudent) => {
           throw new Error ("admission semester is not found")
         }
         userData.id = await generateStudentId(admissionSemester);
+
+        // image upload system
+        if (file) {
+          const imageName = `${userData.id}${payload?.name?.fristName}`;
+          const path = file?.path;
+    
+          //send image to cloudinary
+          const { secure_url } = await sendImageToCloudinary(imageName, path);
+          payload.profileIma = secure_url as string;
+        }
 
         //  create a user (transaction-1)
         const newUser = await User.create([userData], { session });
@@ -77,7 +91,7 @@ const createStudentIntoBb = async (password: string, payload: TStudent) => {
 
 // create faculty into Db
 
-const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
+const createFacultyIntoDB = async (  file: any,password: string, payload: TFaculty) => {
     // create a user object
     const userData: Partial<Tuser> = {};
   
@@ -137,7 +151,7 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
   };
 
   // create admin into db
-  const createAdminIntoDB = async (password: string, payload: TFaculty) => {
+  const createAdminIntoDB = async ( file: any,password: string, payload: TFaculty) => {
     // create a user object
     const userData: Partial<Tuser> = {};
   

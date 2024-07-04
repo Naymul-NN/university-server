@@ -34,7 +34,7 @@ const localgaurdianValidationSchema = z.object({
 // Define Student schema
 const createstudentvalidationSchema = z.object({
   body: z.object({
-    password: z.string().nonempty('password is required'),
+    password: z.string().optional(),
    student: z.object({
     name: userNameSchema,
     gender: z.enum(['male', 'female', 'other']),

@@ -1,6 +1,6 @@
 
 
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { userController } from "./user.controller";
 
 import { studentvalidation } from "../student/student.validation";
@@ -10,14 +10,22 @@ import { AdminValidations } from "../Admin/admin.validation";
 import auth from "../../middleware/auth";
 import { USER_ROLE } from "./user.constant";
 import { userVlidation } from "./user.validation";
+import { upload } from "../../utils/sendImageToCouldnary";
 
 const router = express.Router()
 
-router.post('/create-student',auth(USER_ROLE.admin)
- , validationRequest(studentvalidation.createstudentvalidationSchema), userController.createStudent)
+router.post('/create-student',
+  auth(USER_ROLE.admin)
+ , validationRequest(studentvalidation.createstudentvalidationSchema),
+  userController.createStudent)
 router.post(
     '/create-faculty',
     auth(USER_ROLE.admin,USER_ROLE.superAdmin),
+    upload.single('file'),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
     validationRequest(createFacultyValidationSchema),
     userController.createFaculty,
   );

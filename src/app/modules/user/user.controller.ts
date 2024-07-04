@@ -10,7 +10,7 @@ const createStudent = catchAsync( async (req, res) => {
 // do validation with zod
 //   const zodparsedData = studentvalidationSchema.parse(studentdata)
 
-        const result = await UserServices.createStudentIntoBb(password,studentdata)
+        const result = await UserServices.createStudentIntoBb(  req.file,password,studentdata)
         // res.status(200).json({
         //     success: true,
         //     message: 'Student is created successfully',
@@ -31,7 +31,7 @@ const createFaculty = catchAsync(async (req, res) => {
         if (!facultyData.role) {
                 facultyData.role = 'faculty';
               }
-        const result = await UserServices.createFacultyIntoDB(password, facultyData);
+        const result = await UserServices.createFacultyIntoDB( req.file, password, facultyData);
       
         sendResponse(res, {
           statusCode: httpStatus.OK,
@@ -45,7 +45,7 @@ const createFaculty = catchAsync(async (req, res) => {
 const createAdmin = catchAsync(async (req, res) => {
         const { password, admin: adminData } = req.body;
       
-        const result = await UserServices.createAdminIntoDB(password, adminData);
+        const result = await UserServices.createAdminIntoDB( req.file, password, adminData);
       
         sendResponse(res, {
           statusCode: httpStatus.OK,
