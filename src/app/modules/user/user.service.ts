@@ -118,6 +118,15 @@ const createFacultyIntoDB = async (  file: any,password: string, payload: TFacul
       session.startTransaction();
       //set  generated id
       userData.id = await generateFacultyId();
+
+      // image upload
+      if (file) {
+        const imageName = `${userData.id}${payload?.name?.firstName}`;
+        const path = file?.path;
+        //send image to cloudinary
+        const { secure_url } = await sendImageToCloudinary(imageName, path);
+        payload.profileImg = secure_url as string;
+      }
   
       // create a user (transaction-1)
       const newUser = await User.create([userData], { session }); // array
@@ -168,6 +177,15 @@ const createFacultyIntoDB = async (  file: any,password: string, payload: TFacul
       session.startTransaction();
       //set  generated id
       userData.id = await generateAdminId();
+      // image
+
+      if (file) {
+        const imageName = `${userData.id}${payload?.name?.firstName}`;
+        const path = file?.path;
+        //send image to cloudinary
+        const { secure_url } = await sendImageToCloudinary(imageName, path);
+        payload.profileImg = secure_url as string;
+      }
   
       // create a user (transaction-1)
       const newUser = await User.create([userData], { session }); 
