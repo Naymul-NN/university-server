@@ -25,26 +25,26 @@ const gaurdianvalidationSchema = z.object({
 
 // Define LocalGuardian schema
 const localgaurdianValidationSchema = z.object({
-  name: z.string().nonempty('Name is required'),
-  occupatino: z.string().nonempty('Occupation is required'),
-  contactNo: z.string().nonempty('Contact number is required'),
-  address: z.string().nonempty('Address is required'),
+  name: z.string(),
+  occupatino: z.string(),
+  contactNo: z.string(),
+  address: z.string(),
 });
 
 // Define Student schema
 const createstudentvalidationSchema = z.object({
   body: z.object({
     password: z.string().optional(),
-   student: z.object({
+    student: z.object({
     name: userNameSchema,
     gender: z.enum(['male', 'female', 'other']),
     dateofBirth: z.string().optional(),
-    email: z.string().nonempty('Email is required').email('Email is not valid'),
-    contactNumber: z.string().nonempty('Contact number is required'),
-    emargencyContactNo: z.string().nonempty('Emergency contact number is required'),
+    email: z.string().email('Email is not valid'),
+    contactNumber: z.string(),
+    emargencyContactNo: z.string(),
     bloodgroup: z.enum(['A+', 'B+', 'AB+', 'O-']).optional(),
-    presentAddress: z.string().nonempty('Present address is required'),
-    permanantAddress: z.string().nonempty('Permanent address is required'),
+    presentAddress: z.string(),
+    permanantAddress: z.string(),
     gaurdian: gaurdianvalidationSchema,
     localgaurdian: localgaurdianValidationSchema,
     admissionSemester: z.string(),
