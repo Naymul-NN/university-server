@@ -40,6 +40,16 @@ const createStudentIntoBb = async (
     //    find academid semester info
     const admissionSemester = await AcademicSemesterModel.findById(payload.admissionSemester)
 
+    // find department
+  const academicDepartment = await AcademicDepartmentModel.findById(
+    payload.academicDepartment,
+  );
+
+  if (!academicDepartment) {
+    throw new AppError(400, 'Aademic department not found');
+  }
+  payload.academicFaculty = academicDepartment.academicFacalty;
+
     const session = await mongoose.startSession()
 
     try {

@@ -118,7 +118,7 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     permanantAddress: { type: String, required: true },
     gaurdian: { type: gaurdianSchema, required: true },
     localgaurdian: { type: localgaurdianSchema, required: true },
-    profileIma: { type: String },
+    profileIma: { type: String , default: ''},
     admissionSemester:{
         type: Schema.Types.ObjectId,
         ref: 'AcademicSemester',
@@ -130,6 +130,10 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     academicDepartment: {
         type: Schema.Types.ObjectId,
         ref: 'AcademicDepartment'
+    },
+    academicFaculty: {
+        type: Schema.Types.ObjectId,
+        ref: 'AcademicFacalty'
     }
 
 },{toJSON:{

@@ -42,11 +42,13 @@ export type TStudent = {
     profileIma?: string;
     admissionSemester: Schema.Types.ObjectId;
     isDeleted: boolean;
+    academicFaculty: Types.ObjectId;
     academicDepartment:Schema.Types.ObjectId;
 }
 // for creating static mathod
 
  export interface StudentModel extends Model<TStudent>{
+   // eslint-disable-next-line no-unused-vars
    isUserExists(id: string): Promise<TStudent | null>
 }
 
