@@ -11,12 +11,17 @@ const router = express.Router()
 
 // router.post('/create-student',studentController.createStudent)
 router.get('/',
-    auth(USER_ROLE.admin),
+    auth(USER_ROLE.superAdmin,USER_ROLE.admin),
     studentController.getAllStudents);
 
-router.get('/:studentId', studentController.getSingleStudent);
-router.delete('/:studentId', studentController.deleteSingleStudent);
+router.get('/:studentId',
+    auth(USER_ROLE.superAdmin,USER_ROLE.admin),
+     studentController.getSingleStudent);
+router.delete('/:studentId',
+    auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+     studentController.deleteSingleStudent);
 router.patch('/:studentId',
+    auth(USER_ROLE.superAdmin, USER_ROLE.admin),
     validationRequest(studentvalidation.updatestudentvalidationSchema) ,
     studentController.updateStudent);
 

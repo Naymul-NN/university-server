@@ -12,15 +12,19 @@ import { USER_ROLE } from "../user/user.constant";
 const router = express.Router()
 
 router.post('/create-course',
-  auth(USER_ROLE.admin,USER_ROLE.faculty),
-  validationRequest(CourseVlidation.createCourseValidationSchema),courseController.createCourse)
-router.get('/', courseController.getAllCourse);
+  auth(USER_ROLE.superAdmin,USER_ROLE.admin,USER_ROLE.faculty),
+  validationRequest(CourseVlidation.createCourseValidationSchema),
+  courseController.createCourse)
+
+router.get('/', 
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin,USER_ROLE.faculty,USER_ROLE.student),
+  courseController.getAllCourse);
 router.get('/:id', courseController.getSingleCourse);
 router.delete('/:id', courseController.deleteCourse);
 
 router.patch(
     '/:id',
-    auth(USER_ROLE.admin),
+    auth(USER_ROLE.admin,USER_ROLE.superAdmin),
     validationRequest(
         CourseVlidation.updateCourseValidationSchema,
     ),
@@ -28,11 +32,12 @@ router.patch(
   );
 
   router.put('/:courseId/assign-courseFaculties',
+    auth(USER_ROLE.superAdmin, USER_ROLE.admin),
     validationRequest(CourseVlidation.assignCourseValidationSchema)
     ,courseController.assignFaculties);
 
   router.delete('/:courseId/remove-courseFaculties',
-    auth(USER_ROLE.admin),
+    auth(USER_ROLE.admin, USER_ROLE.superAdmin),
     validationRequest(CourseVlidation.assignCourseValidationSchema)
     ,courseController.removeCourseFaculties);
 
