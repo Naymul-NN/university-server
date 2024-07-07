@@ -36,6 +36,17 @@ router.patch(
     validationRequest(CourseVlidation.assignCourseValidationSchema)
     ,courseController.assignFaculties);
 
+    router.get(
+      '/:courseId/get-faculties',
+      auth(
+        USER_ROLE.superAdmin,
+        USER_ROLE.admin,
+        USER_ROLE.faculty,
+        USER_ROLE.student,
+      ),
+      courseController.getFacultiesWithCourse,
+    );
+
   router.delete('/:courseId/remove-courseFaculties',
     auth(USER_ROLE.admin, USER_ROLE.superAdmin),
     validationRequest(CourseVlidation.assignCourseValidationSchema)
