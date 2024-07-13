@@ -18,16 +18,21 @@ const auth = (...requiredRoles: TUserRole[]) => {
     }
 
     // checking if the given token is valid
-    const decoded = jwt.verify(
-      token,
-      config.jwt_access_secret as string,
-    ) as JwtPayload;
+    let decoded;
+    try {
+      decoded = jwt.verify(
+        token,
+        config.jwt_access_secret as string,
+      ) as JwtPayload;
+    }catch(err){
+      throw new AppError(httpStatus.UNAUTHORIZED, 'you are not auhhorized')
+    }
    
     const { role, userId, iat } = decoded;
 
     // checking if the user is exist
     const user = await User.isUserExistsByCustomId(userId);
-  // console.log(user)
+    // console.log(user)
     if (!user) {
       throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
     }
@@ -45,7 +50,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
     if (userStatus === 'blocked') {
       throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked ! !');
     }
-//  check the password when createdAt
+    //  check the password when createdAt
     if (
       user.passwordChangedAt &&
       User.isJWTIssuedBeforePasswordChanged(
