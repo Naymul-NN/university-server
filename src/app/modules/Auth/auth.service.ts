@@ -6,13 +6,13 @@ import { User } from "../user/user.model";
 import { TLoginUser } from "./auth.interface";
 import config from "../../config";
 import jwt,{ JwtPayload } from "jsonwebtoken";
-import { createToken } from "./auth.utils";
+import { createToken, verifyToken } from "./auth.utils";
 import { sendEmail } from '../../utils/sendEmail';
 
 const loginUser = async (payload: TLoginUser) => {
   // checking if the user is exist
   const user = await User.isUserExistsByCustomId(payload.id);
-  // console.log(user);
+
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
   }
@@ -62,6 +62,7 @@ const loginUser = async (payload: TLoginUser) => {
     needsPasswordChange: user?.needsPsswordChange,
   };
 };
+
 
 const changePassword = async (
   userData: JwtPayload,
@@ -115,12 +116,10 @@ const changePassword = async (
   return null;
 };
 
+
 const refreshToken = async (token: string) => {
   // checking if the given token is valid
-  const decoded = jwt.verify(
-    token,
-    config.jwt_refresh_secret as string,
-  ) as JwtPayload;
+  const decoded = verifyToken(token, config.jwt_refresh_secret as string);
 
   const { userId, iat } = decoded;
 
